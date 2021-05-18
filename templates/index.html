@@ -15,7 +15,7 @@
     </p>
 
     {{ range $i, $file := .MMDFileList }}
-        <p>{{ $file }}</p>
+        <p> {{ $file.Name }} {{ $file.Url }} </p> 
     {{ end }}
 </body>
 </html>

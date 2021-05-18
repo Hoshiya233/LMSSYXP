@@ -7,9 +7,11 @@ import (
 )
 
 type MMDFileInfo struct {
+	Id        int
 	Name      string
 	Dir       string
 	Path      string
+	Url       string
 	Performer []string
 	Bgm       string
 	Label     []string
@@ -30,13 +32,14 @@ func GetMMDFileList() []MMDFileInfo {
 	for i := range filePathNames {
 		filePathName := filePathNames[i]
 		dir, fileName := filepath.Split(filePathName)
-		mmdFileInfo.Dir = dir
+		mmdFileInfo.Id = i
 		mmdFileInfo.Name = fileName
+		mmdFileInfo.Dir = dir
 		mmdFileInfo.Path = filePathName
 		mmdFileInfo.Label = readLabel(fileName)
 		mmdFileInfo.Performer = readPerformer(fileName)
 		mmdFileInfo.Bgm = readBgm(fileName)
-
+		mmdFileInfo.Url = strings.Replace(filePathName, ":", "", 1)
 		fileList = append(fileList, mmdFileInfo)
 	}
 	return fileList

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +16,7 @@ var MMDFileList []tool.MMDFileInfo
 func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", helloxp.index)
 	engine.GET("/index", helloxp.index)
+	engine.GET("/video", helloxp.video)
 }
 
 func (helloxp *HelloXP) index(context *gin.Context) {
@@ -30,5 +33,12 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
 		"labelList":   labelList,
+	})
+}
+
+func (helloxp *HelloXP) video(context *gin.Context) {
+	vid, _ := strconv.Atoi(context.DefaultQuery("vid", "0"))
+	context.HTML(200, "video.html", gin.H{
+		"video_url": MMDFileList[vid].Url,
 	})
 }

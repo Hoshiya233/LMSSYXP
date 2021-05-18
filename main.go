@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"example.com/m/v2/controller"
 	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,14 @@ func main() {
 
 	xpManager := engine
 	xpManager.LoadHTMLGlob("./templates/*")
+	xpManager.Static("/static", "./static")
+
+	//挂载媒体目录
+	for _, path := range config.MMDpaths {
+		b := strings.SplitAfter(path, ":")[0]
+		a := strings.Split(b, ":")[0]
+		xpManager.Static("/"+a, b+"\\")
+	}
 
 	registerRouter(xpManager)
 	xpManager.Run(":" + config.Server.Port)
