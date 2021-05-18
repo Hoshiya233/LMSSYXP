@@ -1,0 +1,12 @@
+server:
+  port: 8004
+
+mmdpaths:
+  - Y:\ACG\MMD
+
+# 数据库现在没啥用
+# database:
+#   host: localhost
+#   port: 5432
+#   user: postgres
+#   password : 123456

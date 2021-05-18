@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>让我康康</title>
+</head>
+
+<body>
+    大家来看看我的xp系统<br>
+    淦哦老兄，你的xp好jb怪哦<br>
+    <p><a href="/">刷新</a></p>
+    <p>
+        选择你的xp标签
+        {{ range $i, $label := .labelList }}
+            <a href="/index?label={{ $label }}"> {{ $label }} </a> 
+        {{ end }}
+    </p>
+
+    {{ range $i, $file := .MMDFileList }}
+        <p>{{ $file }}</p>
+    {{ end }}
+</body>
+</html>
