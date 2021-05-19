@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 
-	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +11,7 @@ type HelloXP struct {
 }
 
 //用全局变量保存MMD文件列表
-var MMDFileList []tool.MMDFileInfo
+var MMDFileList []MMDFileInfo
 var MMDLabelList []string
 
 func (helloxp *HelloXP) Router(engine *gin.Engine) {
@@ -26,8 +26,12 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 
 	search_label := context.QueryArray("label")
 	search_performer := context.QueryArray("performer")
-	searchedList := tool.SearchLabel(MMDFileList, search_label)
-	searchedList = tool.SearchPerformer(searchedList, search_performer)
+	searchedList := SearchLabel(MMDFileList, search_label)
+	searchedList = SearchPerformer(searchedList, search_performer)
+
+	for _, v := range searchedList {
+		fmt.Println(v.Name + "封面为" + v.CoverUrl)
+	}
 
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
@@ -43,7 +47,7 @@ func (helloxp *HelloXP) video(context *gin.Context) {
 }
 
 func (helloxp *HelloXP) scanPath(context *gin.Context) {
-	MMDFileList = tool.GetMMDFileList()
-	MMDLabelList = tool.GetLabels(MMDFileList)
+	GetMMDFileList()
+	MMDLabelList = GetLabels(MMDFileList)
 	context.Redirect(301, "/index")
 }

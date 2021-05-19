@@ -1,4 +1,4 @@
-package tool
+package controller
 
 import (
 	"fmt"
@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"example.com/m/v2/tool"
 )
 
 type MMDFileInfo struct {
@@ -22,9 +24,10 @@ type MMDFileInfo struct {
 	CoverUrl  string
 }
 
-func GetMMDFileList() []MMDFileInfo {
+func GetMMDFileList() {
 	var filePathNames []string
-	for _, path := range MMDPaths {
+	MMDFileList = nil
+	for _, path := range tool.MMDPaths {
 		f, err := filepath.Glob(filepath.Join(path, "*"))
 		if err != nil {
 			log.Fatal(err)
@@ -32,7 +35,6 @@ func GetMMDFileList() []MMDFileInfo {
 		filePathNames = append(filePathNames, f...)
 	}
 
-	var fileList []MMDFileInfo
 	var mmdFileInfo MMDFileInfo
 	for i := range filePathNames {
 		filePathName := filePathNames[i]
@@ -47,26 +49,26 @@ func GetMMDFileList() []MMDFileInfo {
 		mmdFileInfo.Url = strings.Replace(strings.Replace(filePathName, ":", "", 1), `\`, "/", -1)
 		//mmdFileInfo.CoverUrl = getCoverUrl(filePathName, fileName)
 
-		fileList = append(fileList, mmdFileInfo)
+		MMDFileList = append(MMDFileList, mmdFileInfo)
 	}
 	//初始化一个控制池,设置并发数量32
-	pool := NewPool(32, len(fileList))
+	pool := tool.NewPool(32, len(MMDFileList))
 	//计算执行时间
 	now := time.Now()
 	//并发处理
-	for _, v := range fileList {
-		go func(fileinfo MMDFileInfo) {
+	for i := range MMDFileList {
+		go func(fileinfo *MMDFileInfo) {
 			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
 			//任务处理
 			fileinfo.CoverUrl = getCoverUrl(fileinfo.Path, fileinfo.Name)
+			//fileinfo.CoverUrl = "123"
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
-		}(v)
+		}(&MMDFileList[i])
 	}
-	pool.wg.Wait()
+	pool.WG.Wait()
 	//计算执行时间
 	next := time.Now()
 	fmt.Println("执行时间:", next.Sub(now))
-	return fileList
 }
 
 func SearchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
