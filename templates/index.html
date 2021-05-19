@@ -6,16 +6,29 @@
 <body>
     大家来看看我的xp系统<br>
     淦哦老兄，你的xp好jb怪哦<br>
-    <p><a href="/">刷新</a></p>
+    <p>
+        <form name="scanpath" action="/scanpath" method="post">
+            <input type='hidden' name='page' value='1'/>
+            <a href="javascript:document.scanpath.submit();" >扫描目录</a>
+        </form>
+    </p>
+        
+        
     <p>
         选择你的xp标签
+        <a href="/index">全部</a>
         {{ range $i, $label := .labelList }}
             <a href="/index?label={{ $label }}"> {{ $label }} </a> 
         {{ end }}
     </p>
 
     {{ range $i, $file := .MMDFileList }}
-        <p> <a href="/video?vid={{ $file.Id }}">{{ $file.Name }}</a> </p>
+        <div> 
+            <a href="/video?vid={{ $file.Id }}">
+            <img src="{{ $file.CoverUrl }}" width="320px"> <br>
+            {{ $file.Name }}
+            </a>
+        </div>
     {{ end }}
 </body>
 </html>

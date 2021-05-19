@@ -12,18 +12,17 @@ type HelloXP struct {
 
 //用全局变量保存MMD文件列表
 var MMDFileList []tool.MMDFileInfo
+var MMDLabelList []string
 
 func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", helloxp.index)
 	engine.GET("/index", helloxp.index)
 	engine.GET("/video", helloxp.video)
+	engine.POST("/scanpath", helloxp.scanPath)
 }
 
 func (helloxp *HelloXP) index(context *gin.Context) {
-	MMDFileList = tool.GetMMDFileList()
 	//context.JSON(200, &MMDFileList)
-
-	labelList := tool.GetLabels(MMDFileList)
 
 	search_label := context.QueryArray("label")
 	search_performer := context.QueryArray("performer")
@@ -32,7 +31,7 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
-		"labelList":   labelList,
+		"labelList":   MMDLabelList,
 	})
 }
 
@@ -41,4 +40,10 @@ func (helloxp *HelloXP) video(context *gin.Context) {
 	context.HTML(200, "video.html", gin.H{
 		"video_url": MMDFileList[vid].Url,
 	})
+}
+
+func (helloxp *HelloXP) scanPath(context *gin.Context) {
+	MMDFileList = tool.GetMMDFileList()
+	MMDLabelList = tool.GetLabels(MMDFileList)
+	context.Redirect(301, "/index")
 }

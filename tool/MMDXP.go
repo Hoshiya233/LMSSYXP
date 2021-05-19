@@ -2,7 +2,9 @@ package tool
 
 import (
 	"log"
+	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -15,7 +17,11 @@ type MMDFileInfo struct {
 	Performer []string
 	Bgm       string
 	Label     []string
+	CoverUrl  string
 }
+
+//获取视频封面的命令
+//ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
 
 func GetMMDFileList() []MMDFileInfo {
 	var filePathNames []string
@@ -40,6 +46,7 @@ func GetMMDFileList() []MMDFileInfo {
 		mmdFileInfo.Performer = readPerformer(fileName)
 		mmdFileInfo.Bgm = readBgm(fileName)
 		mmdFileInfo.Url = strings.Replace(strings.Replace(filePathName, ":", "", 1), `\`, "/", -1)
+		mmdFileInfo.CoverUrl = getCoverUrl(filePathName, fileName)
 		fileList = append(fileList, mmdFileInfo)
 	}
 	return fileList
@@ -94,6 +101,7 @@ func GetLabels(fileList []MMDFileInfo) []string {
 	for k := range m {
 		labels = append(labels, k)
 	}
+	sort.Strings(labels)
 	return labels
 }
 
@@ -155,4 +163,21 @@ func readBgm(filename string) string {
 	bgm = strings.TrimSpace(strings.Split(a[1], "[")[0])
 
 	return bgm
+}
+
+func getCoverUrl(filepathname string, filename string) string {
+	//只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
+	var coverUrl string
+
+	// 去掉文件名后缀
+	x := strings.LastIndexByte(filename, '.')
+	if x != -1 {
+		filename = filename[:x]
+	}
+	coverPath := `.\static\tmp\cover\` + filename + `.jpg`
+	//cmd := `-i '` + filename + `'-y -f image2 -t 0.001 a.jpg`
+	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-t", "0.001", coverPath)
+	out.Output()
+	coverUrl = strings.ReplaceAll(coverPath[1:], "\\", "/")
+	return coverUrl
 }
