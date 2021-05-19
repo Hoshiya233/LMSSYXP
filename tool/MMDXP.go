@@ -39,7 +39,7 @@ func GetMMDFileList() []MMDFileInfo {
 		mmdFileInfo.Label = readLabel(fileName)
 		mmdFileInfo.Performer = readPerformer(fileName)
 		mmdFileInfo.Bgm = readBgm(fileName)
-		mmdFileInfo.Url = strings.Replace(filePathName, ":", "", 1)
+		mmdFileInfo.Url = strings.Replace(strings.Replace(filePathName, ":", "", 1), `\`, "/", -1)
 		fileList = append(fileList, mmdFileInfo)
 	}
 	return fileList

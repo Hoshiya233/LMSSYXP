@@ -18,7 +18,7 @@
 
     <!-- h5 video播放器 -->
     <div id="video-contnt" style="display: none;">
-        <video id="video" src="" controls width="100%" height="480">
+        <video id="video" src="{{ .video_url }}" controls width="100%" height="480">
             您的浏览器版本太旧，请更新版本或使用其他浏览器
         </video>
     </div>
@@ -47,7 +47,7 @@
         var VLC = document.getElementById("vlcObj");
 
         //var videoUrl = "https://hoshiya.xyz:10443/share.cgi?ssid=02oxqLF&ep=&fid=02oxqLF&open=normal";
-        var videoUrl = "Y/ACG/MMD/南北组 - 霜雪千年.mp4"
+        var videoUrl = VIDEO.src
         layui.use('layer', function () {
             layer = layui.layer;
             

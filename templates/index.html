@@ -15,7 +15,7 @@
     </p>
 
     {{ range $i, $file := .MMDFileList }}
-        <p> {{ $file.Name }} {{ $file.Url }} </p> 
+        <p> <a href="/video?vid={{ $file.Id }}">{{ $file.Name }}</a> </p>
     {{ end }}
 </body>
 </html>
