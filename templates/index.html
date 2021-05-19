@@ -12,8 +12,8 @@
             <a href="javascript:document.scanpath.submit();" >扫描目录</a>
         </form>
     </p>
-        
-        
+
+
     <p>
         选择你的xp标签
         <a href="/index">全部</a>
@@ -21,6 +21,16 @@
             <a href="/index?label={{ $label }}"> {{ $label }} </a> 
         {{ end }}
     </p>
+
+
+    <!-- <p>
+        选择你的lp
+        <a href="/index">我全都要</a>
+        {{ range $i, $lp := .performerList }}
+            <a href="/index?performer={{ $lp }}"> {{ $lp }} </a> 
+        {{ end }}
+    </p> -->
+
 
     {{ range $i, $file := .MMDFileList }}
         <div>

@@ -51,7 +51,7 @@ func GetMMDFileList() {
 		MMDFileList = append(MMDFileList, mmdFileInfo)
 	}
 	//初始化一个控制池,设置并发数量
-	pool := tool.NewPool(32, len(MMDFileList))
+	pool := tool.NewPool(16, len(MMDFileList))
 	//计算执行时间
 	now := time.Now()
 	//并发处理
@@ -104,8 +104,8 @@ func SearchPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo 
 	return searchedList
 }
 
-func GetLabels(fileList []MMDFileInfo) []string {
-	var labels []string
+func GetLabelList(fileList []MMDFileInfo) []string {
+	var labelList []string
 	m := make(map[string]int)
 	for _, fileinfo := range fileList {
 		for _, label := range fileinfo.Label {
@@ -117,10 +117,29 @@ func GetLabels(fileList []MMDFileInfo) []string {
 		}
 	}
 	for k := range m {
-		labels = append(labels, k)
+		labelList = append(labelList, k)
 	}
-	sort.Strings(labels)
-	return labels
+	sort.Strings(labelList)
+	return labelList
+}
+
+func GetPerformerList(fileList []MMDFileInfo) []string {
+	var performerList []string
+	m := make(map[string]int)
+	for _, fileinfo := range fileList {
+		for _, performer := range fileinfo.Performer {
+			if _, ok := m[performer]; ok {
+				continue
+			} else {
+				m[performer] = 1
+			}
+		}
+	}
+	for k := range m {
+		performerList = append(performerList, k)
+	}
+	sort.Strings(performerList)
+	return performerList
 }
 
 func readLabel(filename string) []string {

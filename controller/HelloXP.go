@@ -13,6 +13,8 @@ type HelloXP struct {
 var MMDFileList []MMDFileInfo
 var MMDLabelList []string
 
+//var MMDPerformerList []string
+
 func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", helloxp.index)
 	engine.GET("/index", helloxp.index)
@@ -31,6 +33,7 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
 		"labelList":   MMDLabelList,
+		//"performerList": MMDPerformerList,
 	})
 }
 
@@ -43,6 +46,7 @@ func (helloxp *HelloXP) video(context *gin.Context) {
 
 func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	GetMMDFileList()
-	MMDLabelList = GetLabels(MMDFileList)
+	MMDLabelList = GetLabelList(MMDFileList)
+	//MMDPerformerList = GetPerformerList(MMDFileList)
 	context.Redirect(301, "/index")
 }
