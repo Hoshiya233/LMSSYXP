@@ -2,7 +2,7 @@ let me see see your XP
 
 让我康康你的XP(滑稽)
 
-视频播放页面引用了https://github.com/jaxlix/vlc-video，感谢！
+视频播放页面引用了https://github.com/jaxlix/vlc-video
 
 自从有了NAS以后，资源越来越多，分类就显得很重要，最简单的是根据目录分类，再往上是将文件按照规范命名，也是我现在主要用的方式
 
