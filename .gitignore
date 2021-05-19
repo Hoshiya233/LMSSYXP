@@ -15,5 +15,5 @@
 # vendor/
 
 # 项目运行时生成的缓存文件
-/static/tmp/
+/static/tmp/*
 config.yml

@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"log"
 	"os/exec"
 	"path/filepath"
@@ -51,7 +50,7 @@ func GetMMDFileList() {
 
 		MMDFileList = append(MMDFileList, mmdFileInfo)
 	}
-	//初始化一个控制池,设置并发数量32
+	//初始化一个控制池,设置并发数量
 	pool := tool.NewPool(32, len(MMDFileList))
 	//计算执行时间
 	now := time.Now()
@@ -68,7 +67,7 @@ func GetMMDFileList() {
 	pool.WG.Wait()
 	//计算执行时间
 	next := time.Now()
-	fmt.Println("执行时间:", next.Sub(now))
+	log.Println("提取封面花费时间:", next.Sub(now))
 }
 
 func SearchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
@@ -196,10 +195,10 @@ func getCoverUrl(filepathname string, filename string) string {
 		filename = filename[:x]
 	}
 	coverPath := `.\static\tmp\cover\` + filename + `.jpg`
-	//cmd := `-i '` + filename + `'-y -f image2 -t 0.001 a.jpg`
-	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-t", "0.001", coverPath)
+	//cmd := `-i '` + filename + `'-y -f image2 -ss 5 -t 0.001 a.jpg`
+	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-ss", "5", "-t", "0.001", coverPath)
 	out.Output()
-	fmt.Println("正在获取" + filename + "封面")
+	log.Println("已获取" + filename + "封面")
 	coverUrl = strings.ReplaceAll(coverPath[1:], "\\", "/")
 	return coverUrl
 }

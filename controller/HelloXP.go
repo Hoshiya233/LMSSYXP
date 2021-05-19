@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +27,6 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 	search_performer := context.QueryArray("performer")
 	searchedList := SearchLabel(MMDFileList, search_label)
 	searchedList = SearchPerformer(searchedList, search_performer)
-
-	for _, v := range searchedList {
-		fmt.Println(v.Name + "封面为" + v.CoverUrl)
-	}
 
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
