@@ -16,3 +16,4 @@
 
 # 项目运行时生成的缓存文件
 /static/tmp/
+config.yml

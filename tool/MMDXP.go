@@ -1,11 +1,13 @@
 package tool
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
 
 type MMDFileInfo struct {
@@ -19,9 +21,6 @@ type MMDFileInfo struct {
 	Label     []string
 	CoverUrl  string
 }
-
-//获取视频封面的命令
-//ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
 
 func GetMMDFileList() []MMDFileInfo {
 	var filePathNames []string
@@ -46,9 +45,27 @@ func GetMMDFileList() []MMDFileInfo {
 		mmdFileInfo.Performer = readPerformer(fileName)
 		mmdFileInfo.Bgm = readBgm(fileName)
 		mmdFileInfo.Url = strings.Replace(strings.Replace(filePathName, ":", "", 1), `\`, "/", -1)
-		mmdFileInfo.CoverUrl = getCoverUrl(filePathName, fileName)
+		//mmdFileInfo.CoverUrl = getCoverUrl(filePathName, fileName)
+
 		fileList = append(fileList, mmdFileInfo)
 	}
+	//初始化一个控制池,设置并发数量32
+	pool := NewPool(32, len(fileList))
+	//计算执行时间
+	now := time.Now()
+	//并发处理
+	for _, v := range fileList {
+		go func(fileinfo MMDFileInfo) {
+			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
+			//任务处理
+			fileinfo.CoverUrl = getCoverUrl(fileinfo.Path, fileinfo.Name)
+			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
+		}(v)
+	}
+	pool.wg.Wait()
+	//计算执行时间
+	next := time.Now()
+	fmt.Println("执行时间:", next.Sub(now))
 	return fileList
 }
 
@@ -167,6 +184,8 @@ func readBgm(filename string) string {
 
 func getCoverUrl(filepathname string, filename string) string {
 	//只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
+	//获取视频封面的命令
+	//ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
 	var coverUrl string
 
 	// 去掉文件名后缀
@@ -178,6 +197,7 @@ func getCoverUrl(filepathname string, filename string) string {
 	//cmd := `-i '` + filename + `'-y -f image2 -t 0.001 a.jpg`
 	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-t", "0.001", coverPath)
 	out.Output()
+	fmt.Println("正在获取" + filename + "封面")
 	coverUrl = strings.ReplaceAll(coverPath[1:], "\\", "/")
 	return coverUrl
 }
