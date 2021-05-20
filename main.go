@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"example.com/m/v2/controller"
 	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
@@ -15,15 +17,16 @@ func main() {
 	xpManager.Static("/static", "./static")
 
 	//挂载媒体目录
-	//需要修复重复问题
-	// for _, path := range config.MMDpaths {
-	// 	b := strings.SplitAfter(path, ":")[0]
-	// 	a := strings.Split(b, ":")[0]
-	// 	xpManager.Static("/"+a, b+"\\")
-	// }
+	var path_head_list []string
+	for _, path := range config.MMDpaths {
+		a := strings.Split(path, ":")[0]
+		path_head_list = append(path_head_list, a)
+	}
+	path_head_list = tool.DeleteRepeatList(path_head_list)
+	for _, a := range path_head_list {
+		xpManager.Static("/"+a, a+":\\")
+	}
 
-	xpManager.Static("/E", "E:\\")
-	xpManager.Static("/Y", "Y:\\")
 	registerRouter(xpManager)
 
 	xpManager.Run(":" + config.Server.Port)
