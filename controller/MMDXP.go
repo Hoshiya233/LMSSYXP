@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -62,7 +63,7 @@ func GetMMDFileList() {
 		go func(fileinfo *MMDFileInfo) {
 			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
 			//任务处理
-			fileinfo.CoverUrl = getCoverUrl(fileinfo.Path, fileinfo.Name)
+			fileinfo.CoverUrl = getCoverUrl(fileinfo.Path, fileinfo.Id)
 			//fileinfo.CoverUrl = "123"
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
 		}(&MMDFileList[i])
@@ -205,22 +206,17 @@ func readBgm(filename string) string {
 	return bgm
 }
 
-func getCoverUrl(filepathname string, filename string) string {
+func getCoverUrl(filepathname string, fileid int) string {
 	//只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
 	//获取视频封面的命令
 	//ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
 	var coverUrl string
 
-	// 去掉文件名后缀
-	x := strings.LastIndexByte(filename, '.')
-	if x != -1 {
-		filename = filename[:x]
-	}
-	coverPath := `.\static\tmp\cover\` + filename + `.jpg`
+	coverPath := `.\static\tmp\cover\` + strconv.Itoa(fileid) + `.jpg`
 	//cmd := `-i '` + filename + `'-y -f image2 -ss 5 -t 0.001 a.jpg`
 	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-ss", "5", "-t", "0.001", coverPath)
 	out.Output()
-	log.Println("已获取" + filename + "封面")
+	log.Println("已获取" + filepathname + "封面")
 	coverUrl = strings.ReplaceAll(coverPath[1:], "\\", "/")
 	return coverUrl
 }
