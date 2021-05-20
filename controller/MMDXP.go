@@ -12,15 +12,15 @@ import (
 )
 
 type MMDFileInfo struct {
-	Id        int
-	Name      string
-	Dir       string
-	Path      string
-	Url       string
-	Performer []string
-	Bgm       string
-	Label     []string
-	CoverUrl  string
+	Id        int      `json:"id"`
+	Name      string   `json:"name"`
+	Dir       string   `json:"dir"`
+	Path      string   `json:"path"`
+	Url       string   `json:"url"`
+	Performer []string `json:"performer"`
+	Bgm       string   `json:"bgm"`
+	Label     []string `json:"label"`
+	CoverUrl  string   `json:"coverurl"`
 }
 
 func GetMMDFileList() {
@@ -50,6 +50,9 @@ func GetMMDFileList() {
 
 		MMDFileList = append(MMDFileList, mmdFileInfo)
 	}
+
+	//提取视频封面
+	tool.CreateDir("./static/tmp/cover/")
 	//初始化一个控制池,设置并发数量
 	pool := tool.NewPool(16, len(MMDFileList))
 	//计算执行时间

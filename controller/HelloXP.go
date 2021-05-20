@@ -3,6 +3,7 @@ package controller
 import (
 	"strconv"
 
+	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +21,11 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/index", helloxp.index)
 	engine.GET("/video", helloxp.video)
 	engine.POST("/scanpath", helloxp.scanPath)
+
+	//初始化操作
+	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
+	MMDLabelList = GetLabelList(MMDFileList)
+
 }
 
 func (helloxp *HelloXP) index(context *gin.Context) {
@@ -46,7 +52,12 @@ func (helloxp *HelloXP) video(context *gin.Context) {
 
 func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	GetMMDFileList()
+
+	//将数据写入到缓存中
+	tool.WriteStructToJson("MMDFileList.json", MMDFileList)
+
 	MMDLabelList = GetLabelList(MMDFileList)
 	//MMDPerformerList = GetPerformerList(MMDFileList)
+
 	context.Redirect(301, "/index")
 }

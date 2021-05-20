@@ -23,7 +23,9 @@ func main() {
 	// }
 
 	xpManager.Static("/E", "E:\\")
+	xpManager.Static("/Y", "Y:\\")
 	registerRouter(xpManager)
+
 	xpManager.Run(":" + config.Server.Port)
 }
 
