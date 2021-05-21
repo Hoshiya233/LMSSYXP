@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>大家来看看我的xp系统</title>
+    <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
 <body>
@@ -32,13 +33,16 @@
     </p> -->
 
 
-    {{ range $i, $file := .MMDFileList }}
-        <div>
+    <div>
+        {{ range $i, $file := .MMDFileList }}
+        <div class="item">
             <a href="/video?vid={{ $file.Id }}">
-            <img src="{{ $file.CoverUrl }}" width="320px"> <br>
+            <img src="{{ $file.CoverUrl }}" class="item-cover"> <br>
             {{ $file.Name }}
             </a>
         </div>
-    {{ end }}
+        {{ end }}
+    </div>
+    
 </body>
 </html>

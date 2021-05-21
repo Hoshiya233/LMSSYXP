@@ -1,0 +1,9 @@
+.item {
+    float: left;
+    height: 300px;
+    width: 460px;
+}
+
+.item-cover {
+    height: 240px;
+}

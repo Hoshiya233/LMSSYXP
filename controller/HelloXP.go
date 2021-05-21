@@ -25,7 +25,7 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 
 	//初始化操作
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
-	MMDLabelList = GetLabelList(MMDFileList)
+	MMDLabelList = getLabelList(MMDFileList)
 
 }
 
@@ -34,8 +34,8 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 
 	search_label := context.QueryArray("label")
 	search_performer := context.QueryArray("performer")
-	searchedList := SearchLabel(MMDFileList, search_label)
-	searchedList = SearchPerformer(searchedList, search_performer)
+	searchedList := searchLabel(MMDFileList, search_label)
+	searchedList = searchPerformer(searchedList, search_performer)
 
 	context.HTML(200, "index.html", gin.H{
 		"MMDFileList": searchedList,
@@ -52,12 +52,12 @@ func (helloxp *HelloXP) video(context *gin.Context) {
 }
 
 func (helloxp *HelloXP) scanPath(context *gin.Context) {
-	GetMMDFileList()
+	getMMDFileList()
 
 	//将数据写入到缓存中
 	tool.WriteStructToJson("MMDFileList.json", MMDFileList)
 
-	MMDLabelList = GetLabelList(MMDFileList)
+	MMDLabelList = getLabelList(MMDFileList)
 	//MMDPerformerList = GetPerformerList(MMDFileList)
 
 	context.Redirect(301, "/index")

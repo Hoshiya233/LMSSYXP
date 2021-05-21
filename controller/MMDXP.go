@@ -24,7 +24,7 @@ type MMDFileInfo struct {
 	CoverUrl  string   `json:"coverurl"`
 }
 
-func GetMMDFileList() {
+func getMMDFileList() {
 	var filePathNames []string
 	MMDFileList = nil
 	for _, path := range tool.MMDPaths {
@@ -74,7 +74,7 @@ func GetMMDFileList() {
 	log.Println("提取封面花费时间:", next.Sub(now))
 }
 
-func SearchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
+func searchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
 	if len(labels) == 0 {
 		return fileList
 	}
@@ -91,7 +91,7 @@ func SearchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
 	return searchedList
 }
 
-func SearchPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo {
+func searchPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo {
 	if len(performers) == 0 {
 		return fileList
 	}
@@ -108,7 +108,7 @@ func SearchPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo 
 	return searchedList
 }
 
-func GetLabelList(fileList []MMDFileInfo) []string {
+func getLabelList(fileList []MMDFileInfo) []string {
 	var labelList []string
 	m := make(map[string]int)
 	for _, fileinfo := range fileList {
@@ -127,7 +127,7 @@ func GetLabelList(fileList []MMDFileInfo) []string {
 	return labelList
 }
 
-func GetPerformerList(fileList []MMDFileInfo) []string {
+func getPerformerList(fileList []MMDFileInfo) []string {
 	var performerList []string
 	m := make(map[string]int)
 	for _, fileinfo := range fileList {
