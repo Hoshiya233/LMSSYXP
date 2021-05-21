@@ -20,6 +20,7 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", helloxp.index)
 	engine.GET("/index", helloxp.index)
 	engine.GET("/video", helloxp.video)
+	engine.GET("/iteachyou", helloxp.iteachyou)
 	engine.POST("/scanpath", helloxp.scanPath)
 
 	//初始化操作
@@ -60,4 +61,8 @@ func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	//MMDPerformerList = GetPerformerList(MMDFileList)
 
 	context.Redirect(301, "/index")
+}
+
+func (helloxp *HelloXP) iteachyou(context *gin.Context) {
+	context.HTML(200, "iteachyou.html", gin.H{})
 }
