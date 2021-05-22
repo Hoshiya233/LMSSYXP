@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-cn">
 <head>
+    <meta charset="UTF-8">
     <title>大家来看看我的xp系统</title>
     <link rel="stylesheet" href="/static/css/index.css">
 </head>
@@ -37,7 +39,7 @@
         {{ range $i, $file := .MMDFileList }}
         <div class="item">
             <a href="/video?vid={{ $file.Id }}">
-            <img src="{{ $file.CoverUrl }}" class="item-cover"> <br>
+            <img class="item-cover" src="{{ $file.CoverUrl }}"> <br>
             {{ $file.Name }}
             </a>
         </div>
