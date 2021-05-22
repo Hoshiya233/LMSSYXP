@@ -2,7 +2,6 @@ package tool
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"os"
 )
@@ -13,14 +12,14 @@ func WriteStructToJson(filename string, data interface{}) {
 	if err != nil {
 		log.Println("将struct转为json错误：", err)
 	}
-	err = ioutil.WriteFile("./static/tmp/save/"+filename, stu, 0777)
+	err = os.WriteFile("./static/tmp/save/"+filename, stu, 0777)
 	if err != nil {
 		log.Println("写入文件错误：", err)
 	}
 }
 
 func ReadStructFromJson(filename string, data interface{}) {
-	stu, err := ioutil.ReadFile("./static/tmp/save/" + filename)
+	stu, err := os.ReadFile("./static/tmp/save/" + filename)
 	if err != nil {
 		log.Println("读取文件错误：", err)
 	}

@@ -1,8 +1,8 @@
 package tool
 
 import (
-	"io/ioutil"
 	"log"
+	"os"
 
 	"gopkg.in/yaml.v2"
 )
@@ -28,7 +28,7 @@ var MMDPaths []string
 
 func ParseConfig(path string) *Config {
 	var config *Config
-	yamlFile, err := ioutil.ReadFile(path)
+	yamlFile, err := os.ReadFile(path)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
