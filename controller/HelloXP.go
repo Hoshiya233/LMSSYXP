@@ -14,7 +14,7 @@ type HelloXP struct {
 var MMDFileList []MMDFileInfo
 var MMDLabelList []string
 
-//var MMDPerformerList []string
+var MMDPerformerList []string
 
 func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", helloxp.index)
@@ -26,6 +26,7 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	//初始化操作
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
 	MMDLabelList = getLabelList(MMDFileList)
+	MMDPerformerList = getPerformerList(MMDFileList)
 
 }
 
@@ -38,9 +39,9 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 	searchedList = searchPerformer(searchedList, search_performer)
 
 	context.HTML(200, "index.html", gin.H{
-		"MMDFileList": searchedList,
-		"labelList":   MMDLabelList,
-		//"performerList": MMDPerformerList,
+		"MMDFileList":   searchedList,
+		"labelList":     MMDLabelList,
+		"performerList": MMDPerformerList,
 	})
 }
 
@@ -58,7 +59,7 @@ func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	tool.WriteStructToJson("MMDFileList.json", MMDFileList)
 
 	MMDLabelList = getLabelList(MMDFileList)
-	//MMDPerformerList = GetPerformerList(MMDFileList)
+	MMDPerformerList = getPerformerList(MMDFileList)
 
 	context.Redirect(301, "/index")
 }

@@ -148,6 +148,7 @@ func getPerformerList(fileList []MMDFileInfo) []string {
 
 func readLabel(filename string) []string {
 	// 从文件名中读取标签
+
 	var label []string
 
 	// 去掉文件名后缀
@@ -170,6 +171,7 @@ func readLabel(filename string) []string {
 
 func readPerformer(filename string) []string {
 	//从文件名中读取演出者
+
 	var performer []string
 
 	// 去掉文件名后缀
@@ -178,16 +180,23 @@ func readPerformer(filename string) []string {
 		filename = filename[:x]
 	}
 
-	a := strings.Split(filename, "-")
-	aa := strings.Split(a[0], "&")
-	for i := range aa {
-		performer = append(performer, strings.TrimSpace(aa[i]))
+	x = strings.IndexByte(filename, '-')
+	if x == -1 {
+		return performer
+	} else {
+		a := filename[:x]
+		aa := strings.Split(a, "&")
+		for i := range aa {
+			performer = append(performer, strings.TrimSpace(aa[i]))
+		}
 	}
+
 	return performer
 }
 
 func readBgm(filename string) string {
 	//从文件名中读取BGM
+
 	var bgm string
 
 	// 去掉文件名后缀
@@ -201,15 +210,18 @@ func readBgm(filename string) string {
 		return bgm
 	}
 
-	bgm = strings.TrimSpace(strings.Split(a[1], "[")[0])
+	bgm = strings.TrimSpace(strings.TrimRight(a[1], "["))
 
 	return bgm
 }
 
 func getCoverUrl(filepathname string, fileid int) string {
-	//只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
-	//获取视频封面的命令
-	//ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
+	/*
+		只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
+		获取视频封面的命令
+		ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
+	*/
+
 	var coverUrl string
 
 	coverPath := `.\static\tmp\cover\` + strconv.Itoa(fileid) + `.jpg`
