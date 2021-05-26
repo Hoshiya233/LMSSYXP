@@ -47,31 +47,11 @@ func getMMDFileList() {
 		mmdFileInfo.Performer = readPerformer(fileName)
 		mmdFileInfo.Bgm = readBgm(fileName)
 		mmdFileInfo.Url = strings.Replace(strings.Replace(filePathName, ":", "", 1), `\`, "/", -1)
-		//mmdFileInfo.CoverUrl = getCoverUrl(filePathName, fileName)
+		mmdFileInfo.CoverUrl = `/static/tmp/cover/` + strconv.Itoa(i) + `.jpg`
 
 		MMDFileList = append(MMDFileList, mmdFileInfo)
 	}
 
-	//提取视频封面
-	tool.CreateDir("./static/tmp/cover/")
-	//初始化一个控制池,设置并发数量
-	pool := tool.NewPool(16, len(MMDFileList))
-	//计算执行时间
-	now := time.Now()
-	//并发处理
-	for i := range MMDFileList {
-		go func(fileinfo *MMDFileInfo) {
-			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
-			//任务处理
-			fileinfo.CoverUrl = getCoverUrl(fileinfo.Path, fileinfo.Id)
-			//fileinfo.CoverUrl = "123"
-			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
-		}(&MMDFileList[i])
-	}
-	pool.WG.Wait()
-	//计算执行时间
-	next := time.Now()
-	log.Println("提取封面花费时间:", next.Sub(now))
 }
 
 func searchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
@@ -210,25 +190,38 @@ func readBgm(filename string) string {
 		return bgm
 	}
 
-	bgm = strings.TrimSpace(strings.TrimRight(a[1], "["))
+	bgm = strings.TrimSpace(strings.TrimRight(strings.TrimRight(a[1], "["), "-"))
 
 	return bgm
 }
 
-func getCoverUrl(filepathname string, fileid int) string {
+func extractCover() {
 	/*
+		提取视频封面
 		只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
-		获取视频封面的命令
-		ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
+		获取视频封面的命令 ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
 	*/
 
-	var coverUrl string
-
-	coverPath := `.\static\tmp\cover\` + strconv.Itoa(fileid) + `.jpg`
-	//cmd := `-i '` + filename + `'-y -f image2 -ss 5 -t 0.001 a.jpg`
-	out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", filepathname, "-y", "-f", "image2", "-ss", "5", "-t", "0.001", coverPath)
-	out.Output()
-	log.Println("已获取" + filepathname + "封面")
-	coverUrl = strings.ReplaceAll(coverPath[1:], "\\", "/")
-	return coverUrl
+	tool.CreateDir("./static/tmp/cover/")
+	//初始化一个控制池,设置并发数量
+	pool := tool.NewPool(16, len(MMDFileList))
+	//计算执行时间
+	begin := time.Now()
+	//并发处理
+	for i := range MMDFileList {
+		go func(item *MMDFileInfo) {
+			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
+			//任务处理
+			coverPath := `.\static\tmp\cover\` + strconv.Itoa(item.Id) + `.jpg`
+			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", item.Path, "-y", "-f", "image2", "-ss", "5", "-t", "0.001", coverPath)
+			out.Output()
+			log.Println("已获取" + item.Name + "封面")
+			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
+			log.Println("任务进度：", pool.GetProgressRate())
+		}(&MMDFileList[i])
+	}
+	pool.Wait()
+	//计算执行时间
+	end := time.Now()
+	log.Println("提取封面花费时间:", end.Sub(begin))
 }

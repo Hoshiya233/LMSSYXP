@@ -22,6 +22,7 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/video", helloxp.video)
 	engine.GET("/iteachyou", helloxp.iteachyou)
 	engine.POST("/scanpath", helloxp.scanPath)
+	engine.POST("/extractcover", helloxp.extractcover)
 
 	//初始化操作
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
@@ -61,6 +62,11 @@ func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	MMDLabelList = getLabelList(MMDFileList)
 	MMDPerformerList = getPerformerList(MMDFileList)
 
+	context.Redirect(301, "/index")
+}
+
+func (helloxp *HelloXP) extractcover(context *gin.Context) {
+	extractCover()
 	context.Redirect(301, "/index")
 }
 
