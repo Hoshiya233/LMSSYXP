@@ -217,6 +217,7 @@ func extractCover() {
 			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
 			out.Output()
 			log.Println("已获取" + item.Name + "封面")
+			//Message <- "已获取" + item.Name + "封面"
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
 			log.Println("任务进度：", pool.GetProgressRate())
 		}(&MMDFileList[i])

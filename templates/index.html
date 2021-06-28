@@ -23,6 +23,10 @@
         </form>
     </p>
 
+    <p>
+        消息
+        <div id="msg"></div>
+    </p>
 
     <p>
         选择你的xp标签
@@ -54,4 +58,25 @@
     </div>
     
 </body>
+
+<script>
+    var ws = new WebSocket("ws://localhost:8004/msg");  
+    //连接打开时触发
+    ws.onopen = function(evt) {
+        document.getElementById("msg").innerText = "Connection open ...";
+        //console.log("Connection open ...");
+        //ws.send("ping");
+    };
+    //接收到消息时触发  
+    ws.onmessage = function(evt) {
+        document.getElementById("msg").innerText = evt.data;
+        //console.log("Received Message: " + evt.data);  
+    };
+    //连接关闭时触发  
+    ws.onclose = function(evt) {
+        document.getElementById("msg").innerText = "Connection closed."
+        //console.log("Connection closed.");
+    };
+</script>
+
 </html>
