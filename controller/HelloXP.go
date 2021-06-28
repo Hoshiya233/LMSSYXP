@@ -110,9 +110,12 @@ func (h *HelloXP) wss(context *gin.Context) {
 				do_close = true
 				return
 			}
+
+			// 提取视频封面
 			if string(message) == "extractcover" {
-				go extractCover(m)
+				extractCover(m)
 			}
+
 			time.Sleep(time.Second * 10)
 		}
 	}()

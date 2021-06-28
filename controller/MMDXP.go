@@ -226,4 +226,5 @@ func extractCover(m *tool.MessageList) {
 	//计算执行时间
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
+	m.Msg <- "任务完成"
 }
