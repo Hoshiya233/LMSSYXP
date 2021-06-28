@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"example.com/m/v2/tool"
 	"github.com/gin-gonic/gin"
@@ -20,23 +21,20 @@ var upGrader = websocket.Upgrader{
 	},
 }
 
-// 消息队列
-var Message chan string
-
 //用全局变量保存MMD文件列表
 var MMDFileList []MMDFileInfo
-var MMDLabelList []string
 
+var MMDLabelList []string
 var MMDPerformerList []string
 
-func (helloxp *HelloXP) Router(engine *gin.Engine) {
-	engine.GET("/", helloxp.index)
-	engine.GET("/index", helloxp.index)
-	engine.GET("/video", helloxp.video)
-	engine.GET("/iteachyou", helloxp.iteachyou)
-	engine.POST("/scanpath", helloxp.scanPath)
-	engine.POST("/extractcover", helloxp.extractcover)
-	engine.GET("/msg", helloxp.msg)
+func (h *HelloXP) Router(engine *gin.Engine) {
+	engine.GET("/", h.index)
+	engine.GET("/index", h.index)
+	engine.GET("/video", h.video)
+	engine.GET("/iteachyou", h.iteachyou)
+	engine.POST("/scanpath", h.scanPath)
+	//engine.POST("/extractcover", h.extractcover)
+	engine.GET("/wss", h.wss)
 
 	//初始化操作
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
@@ -45,7 +43,7 @@ func (helloxp *HelloXP) Router(engine *gin.Engine) {
 
 }
 
-func (helloxp *HelloXP) index(context *gin.Context) {
+func (h *HelloXP) index(context *gin.Context) {
 	//context.JSON(200, &MMDFileList)
 
 	search_label := context.QueryArray("label")
@@ -60,14 +58,14 @@ func (helloxp *HelloXP) index(context *gin.Context) {
 	})
 }
 
-func (helloxp *HelloXP) video(context *gin.Context) {
+func (h *HelloXP) video(context *gin.Context) {
 	vid, _ := strconv.Atoi(context.DefaultQuery("vid", "0"))
 	context.HTML(200, "video.html", gin.H{
 		"video_url": MMDFileList[vid].Url,
 	})
 }
 
-func (helloxp *HelloXP) scanPath(context *gin.Context) {
+func (h *HelloXP) scanPath(context *gin.Context) {
 	getMMDFileList()
 
 	//将数据写入到缓存中
@@ -79,35 +77,63 @@ func (helloxp *HelloXP) scanPath(context *gin.Context) {
 	context.Redirect(301, "/index")
 }
 
-func (helloxp *HelloXP) extractcover(context *gin.Context) {
-	context.Redirect(301, "/index")
-	extractCover()
-}
+// func (h *HelloXP) extractcover(context *gin.Context) {
+// 	context.Redirect(301, "/index")
+// 	//extractCover()
+// }
 
-func (helloxp *HelloXP) iteachyou(context *gin.Context) {
+func (h *HelloXP) iteachyou(context *gin.Context) {
 	context.HTML(200, "iteachyou.html", gin.H{})
 }
 
-func (helloxp *HelloXP) msg(context *gin.Context) {
-	log.Println("正在运行msg")
+func (h *HelloXP) wss(context *gin.Context) {
+	log.Println("正在运行wss")
 	//升级get请求为webSocket协议
 	ws, err := upGrader.Upgrade(context.Writer, context.Request, nil)
 	if err != nil {
 		return
 	}
 	defer ws.Close()
-	for {
-		//读取ws数据
-		// mt, _, err := ws.ReadMessage()
-		// if err != nil {
-		// 	break
-		// }
-		log.Println("正在监听chan")
-		a := <-Message
-		//写入ws数据
-		err = ws.WriteMessage(200, []byte(a))
-		if err != nil {
-			break
+
+	//检查是否需要关闭连接
+	do_close := false
+
+	m := tool.NewMessageList()
+	go func() {
+		for {
+			//读取ws数据
+			t, message, err := ws.ReadMessage()
+			if err != nil {
+				log.Println("读取ws数据出错：", err)
+			}
+			if t == -1 {
+				do_close = true
+				return
+			}
+			if string(message) == "extractcover" {
+				go extractCover(m)
+			}
+			time.Sleep(time.Second * 10)
 		}
+	}()
+
+	go func() {
+		for {
+			//log.Println("正在监听chan")
+			a := <-m.Msg
+			//log.Println("从chan中取出：", a)
+			//写入ws数据
+			err = ws.WriteMessage(websocket.TextMessage, []byte(a))
+			if err != nil {
+				log.Println("写入ws数据出错：", err)
+			}
+		}
+	}()
+
+	for {
+		if do_close {
+			return
+		}
+		time.Sleep(time.Second * 10)
 	}
 }

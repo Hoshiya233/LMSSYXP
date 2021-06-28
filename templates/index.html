@@ -17,10 +17,11 @@
     </p>
 
     <p>
-        <form name="extractcover" action="/extractcover" method="post">
+        <!-- <form name="extractcover" action="/extractcover" method="post">
             <input type='hidden' name='page' value='1'/>
             <a href="javascript:document.extractcover.submit();" >提取视频封面</a>
-        </form>
+        </form> -->
+        <button id="extractcover">提取视频封面</button>
     </p>
 
     <p>
@@ -60,23 +61,28 @@
 </body>
 
 <script>
-    var ws = new WebSocket("ws://localhost:8004/msg");  
+    var ws = new WebSocket("ws://localhost:8004/wss");  
     //连接打开时触发
     ws.onopen = function(evt) {
         document.getElementById("msg").innerText = "Connection open ...";
         //console.log("Connection open ...");
         //ws.send("ping");
     };
-    //接收到消息时触发  
+    //接收到消息时触发
     ws.onmessage = function(evt) {
         document.getElementById("msg").innerText = evt.data;
         //console.log("Received Message: " + evt.data);  
     };
-    //连接关闭时触发  
+    //连接关闭时触发
     ws.onclose = function(evt) {
         document.getElementById("msg").innerText = "Connection closed."
         //console.log("Connection closed.");
     };
+    
+    //按下“提取视频封面”按钮时
+    document.getElementById("extractcover").onclick = function() {
+        ws.send("extractcover");
+    }
 </script>
 
 </html>
