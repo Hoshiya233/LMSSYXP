@@ -199,12 +199,13 @@ func extractCover() {
 	/*
 		提取视频封面
 		只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
-		获取视频封面的命令 ffmpeg.exe -i '.\弱音 - メランコリック.mp4' -y -f image2 -t 0.001 a.jpg
+		ffmpeg参数说明  -threads n 限制使用CPU核心数
+						-ss n 放在-i之前，表示直接从第n秒开始读取；放在-i之后，表示在n之前的正常解码但会被丢弃，浪费CPU
 	*/
 
 	tool.CreateDir("./static/tmp/cover/")
 	//初始化一个控制池,设置并发数量
-	pool := tool.NewPool(16, len(MMDFileList))
+	pool := tool.NewPool(4, len(MMDFileList))
 	//计算执行时间
 	begin := time.Now()
 	//并发处理
@@ -213,7 +214,7 @@ func extractCover() {
 			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
 			//任务处理
 			coverPath := `.\static\tmp\cover\` + strconv.Itoa(item.Id) + `.jpg`
-			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-i", item.Path, "-y", "-f", "image2", "-ss", "5", "-t", "0.001", coverPath)
+			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
 			out.Output()
 			log.Println("已获取" + item.Name + "封面")
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
