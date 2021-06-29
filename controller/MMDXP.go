@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"example.com/m/v2/tool"
+	"github.com/gorilla/websocket"
 )
 
 type MMDFileInfo struct {
@@ -195,7 +196,7 @@ func readBgm(filename string) string {
 	return bgm
 }
 
-func extractCover(m *tool.MessageList) {
+func extractCover(ws *websocket.Conn) {
 	/*
 		提取视频封面
 		只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
@@ -216,9 +217,13 @@ func extractCover(m *tool.MessageList) {
 			coverPath := `.\static\tmp\cover\` + strconv.Itoa(item.Id) + `.jpg`
 			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
 			out.Output()
-			log.Println("已获取" + item.Name + "封面")
-			m.Msg <- "已获取" + item.Name + "封面"
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
+			log.Println("已获取" + item.Name + "封面")
+			//写入ws数据
+			err := ws.WriteMessage(websocket.TextMessage, []byte("已获取"+item.Name+"封面"))
+			if err != nil {
+				log.Println("写入ws数据出错：", err)
+			}
 			log.Println("任务进度：", pool.GetProgressRate())
 		}(&MMDFileList[i])
 	}
@@ -226,5 +231,9 @@ func extractCover(m *tool.MessageList) {
 	//计算执行时间
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
-	m.Msg <- "任务完成"
+	//写入ws数据
+	err := ws.WriteMessage(websocket.TextMessage, []byte("任务完成"))
+	if err != nil {
+		log.Println("写入ws数据出错：", err)
+	}
 }
