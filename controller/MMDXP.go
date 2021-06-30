@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"log"
 	"os/exec"
 	"path/filepath"
@@ -10,7 +11,6 @@ import (
 	"time"
 
 	"example.com/m/v2/tool"
-	"github.com/gorilla/websocket"
 )
 
 type MMDFileInfo struct {
@@ -196,7 +196,7 @@ func readBgm(filename string) string {
 	return bgm
 }
 
-func extractCover(ws *websocket.Conn) {
+func extractCover(msgList *tool.MessageList) {
 	/*
 		提取视频封面
 		只能在windows上执行，如果要在linux上执行，需要改目录分隔符，如果有集成golang的方案就好了
@@ -218,13 +218,18 @@ func extractCover(ws *websocket.Conn) {
 			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
 			out.Output()
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
+
 			log.Println("已获取" + item.Name + "封面")
-			//写入ws数据
-			err := ws.WriteMessage(websocket.TextMessage, []byte("已获取"+item.Name+"封面"))
-			if err != nil {
-				log.Println("写入ws数据出错：", err)
-			}
 			log.Println("任务进度：", pool.GetProgressRate())
+
+			//写入ws数据，使用json格式
+			msg, _ := json.Marshal(
+				struct {
+					Plan float32 `json:"plan"`
+					Txt  string  `json:"txt"`
+				}{Plan: pool.GetProgressRate(), Txt: "已获取" + item.Name + "封面"})
+			msgList.Msg <- msg
+
 		}(&MMDFileList[i])
 	}
 	pool.Wait()
@@ -232,8 +237,10 @@ func extractCover(ws *websocket.Conn) {
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
 	//写入ws数据
-	err := ws.WriteMessage(websocket.TextMessage, []byte("任务完成"))
-	if err != nil {
-		log.Println("写入ws数据出错：", err)
-	}
+	msg, _ := json.Marshal(
+		struct {
+			Plan float32 `json:"plan"`
+			Txt  string  `json:"txt"`
+		}{Plan: 1, Txt: "已完成"})
+	msgList.Msg <- msg
 }

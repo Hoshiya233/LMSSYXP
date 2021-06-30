@@ -98,6 +98,8 @@ func (h *HelloXP) wss(context *gin.Context) {
 	//检查是否需要关闭连接
 	do_close := false
 
+	msgList := tool.NewMessageList()
+
 	go func() {
 		for {
 			//读取ws数据
@@ -112,10 +114,23 @@ func (h *HelloXP) wss(context *gin.Context) {
 
 			// 提取视频封面
 			if string(message) == "extractcover" {
-				extractCover(ws)
+				extractCover(msgList)
 			}
 
 			time.Sleep(time.Second * 10)
+		}
+	}()
+
+	go func() {
+		for {
+			//log.Println("正在监听chan")
+			a := <-msgList.Msg
+			//log.Println("从chan中取出：", a)
+			//写入ws数据
+			err = ws.WriteJSON(a)
+			if err != nil {
+				log.Println("写入ws数据出错：", err)
+			}
 		}
 	}()
 

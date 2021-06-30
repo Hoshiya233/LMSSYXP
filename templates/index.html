@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>大家来看看我的xp系统</title>
     <link rel="stylesheet" href="/static/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
 </head>
 
 <body>
@@ -70,8 +71,10 @@
     };
     //接收到消息时触发
     ws.onmessage = function(evt) {
-        document.getElementById("msg").innerText = evt.data;
-        //console.log("Received Message: " + evt.data);  
+        var msg_str = Base64.decode(evt.data);
+        var msg = JSON.parse(msg_str);
+        document.getElementById("msg").innerText = msg.txt;
+        //console.log("Received Message: " + msg);
     };
     //连接关闭时触发
     ws.onclose = function(evt) {
