@@ -124,10 +124,10 @@ func (h *HelloXP) wss(context *gin.Context) {
 	go func() {
 		for {
 			//log.Println("正在监听chan")
-			a := <-msgList.Msg
+			msg := msgList.Read()
 			//log.Println("从chan中取出：", a)
 			//写入ws数据
-			err = ws.WriteJSON(a)
+			err = ws.WriteJSON(msg)
 			if err != nil {
 				log.Println("写入ws数据出错：", err)
 			}

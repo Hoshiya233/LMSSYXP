@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"encoding/json"
 	"log"
 	"os/exec"
 	"path/filepath"
@@ -223,12 +222,7 @@ func extractCover(msgList *tool.MessageList) {
 			log.Println("任务进度：", pool.GetProgressRate())
 
 			//写入ws数据，使用json格式
-			msg, _ := json.Marshal(
-				struct {
-					Plan float32 `json:"plan"`
-					Txt  string  `json:"txt"`
-				}{Plan: pool.GetProgressRate(), Txt: "已获取" + item.Name + "封面"})
-			msgList.Msg <- msg
+			msgList.Write(pool.GetProgressRate(), "已获取"+item.Name+"封面")
 
 		}(&MMDFileList[i])
 	}
@@ -237,10 +231,5 @@ func extractCover(msgList *tool.MessageList) {
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
 	//写入ws数据
-	msg, _ := json.Marshal(
-		struct {
-			Plan float32 `json:"plan"`
-			Txt  string  `json:"txt"`
-		}{Plan: 1, Txt: "已完成"})
-	msgList.Msg <- msg
+	msgList.Write(1, "已完成")
 }
