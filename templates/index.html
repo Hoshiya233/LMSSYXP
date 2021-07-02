@@ -26,8 +26,8 @@
     </p>
 
     <p>
-        消息
-        <div id="msg"></div>
+        <div id="msg-plan" style="width: 0px; height: 10px; background:rgb(41, 185, 221);"></div>
+        <div id="msg-txt"></div>
     </p>
 
     <p>
@@ -65,7 +65,7 @@
     var ws = new WebSocket("ws://localhost:8004/wss");  
     //连接打开时触发
     ws.onopen = function(evt) {
-        document.getElementById("msg").innerText = "Connection open ...";
+        //document.getElementById("msg").innerText = "Connection open ...";
         //console.log("Connection open ...");
         //ws.send("ping");
     };
@@ -73,12 +73,18 @@
     ws.onmessage = function(evt) {
         var msg_str = Base64.decode(evt.data);
         var msg = JSON.parse(msg_str);
-        document.getElementById("msg").innerText = msg.txt;
-        //console.log("Received Message: " + msg);
+        document.getElementById("msg-txt").innerText = msg.txt;
+
+        //进度条根据plan变长
+        document.getElementById("msg-plan").style.width = 200*msg.plan + 'px';
+        if (msg.plan == 1) {
+            //当进度到达1时，变为绿色
+            document.getElementById("msg-plan").style.background = "green"
+        }
     };
     //连接关闭时触发
     ws.onclose = function(evt) {
-        document.getElementById("msg").innerText = "Connection closed."
+        //document.getElementById("msg").innerText = "Connection closed."
         //console.log("Connection closed.");
     };
     

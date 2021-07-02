@@ -14,12 +14,12 @@ func NewMessageList() *MessageList {
 }
 
 func (ml *MessageList) Write(plan float32, txt string) {
-	mm, _ := json.Marshal(
+	msg_json, _ := json.Marshal(
 		struct {
 			Plan float32 `json:"plan"`
 			Txt  string  `json:"txt"`
 		}{Plan: plan, Txt: txt})
-	ml.msg <- mm
+	ml.msg <- msg_json
 }
 
 func (ml *MessageList) Read() []byte {
