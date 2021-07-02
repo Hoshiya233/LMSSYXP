@@ -38,7 +38,6 @@
         {{ end }}
     </p>
 
-
     <p>
         选择你的lp
         <a href="/index">我全都要</a>
@@ -50,9 +49,9 @@
 
     <div>
         {{ range $i, $file := .MMDFileList }}
-        <div class="item">
+        <div class="video-item">
             <a href="/video?vid={{ $file.Id }}">
-            <img class="item-cover" src="{{ $file.CoverUrl }}"> <br>
+            <img class="video-cover" src="{{ $file.CoverUrl }}"> <br>
             {{ $file.Name }}
             </a>
         </div>
@@ -62,15 +61,15 @@
 </body>
 
 <script>
-    var ws = new WebSocket("ws://localhost:8004/wss");  
+    var ws_jobplan = new WebSocket("ws://localhost:8004/ws-jobplan");  
     //连接打开时触发
-    ws.onopen = function(evt) {
+    ws_jobplan.onopen = function(evt) {
         //document.getElementById("msg").innerText = "Connection open ...";
         //console.log("Connection open ...");
-        //ws.send("ping");
+        //ws_jobplan.send("ping");
     };
     //接收到消息时触发
-    ws.onmessage = function(evt) {
+    ws_jobplan.onmessage = function(evt) {
         var msg_str = Base64.decode(evt.data);
         var msg = JSON.parse(msg_str);
         document.getElementById("msg-txt").innerText = msg.txt;
@@ -83,14 +82,14 @@
         }
     };
     //连接关闭时触发
-    ws.onclose = function(evt) {
+    ws_jobplan.onclose = function(evt) {
         //document.getElementById("msg").innerText = "Connection closed."
         //console.log("Connection closed.");
     };
     
     //按下“提取视频封面”按钮时
     document.getElementById("extractcover").onclick = function() {
-        ws.send("extractcover");
+        ws_jobplan.send("extractcover");
     }
 </script>
 

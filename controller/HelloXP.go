@@ -34,7 +34,7 @@ func (h *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/iteachyou", h.iteachyou)
 	engine.POST("/scanpath", h.scanPath)
 	//engine.POST("/extractcover", h.extractcover)
-	engine.GET("/wss", h.wss)
+	engine.GET("/ws-jobplan", h.wsJobPlan)
 
 	//初始化操作
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
@@ -86,7 +86,7 @@ func (h *HelloXP) iteachyou(context *gin.Context) {
 	context.HTML(200, "iteachyou.html", gin.H{})
 }
 
-func (h *HelloXP) wss(context *gin.Context) {
+func (h *HelloXP) wsJobPlan(context *gin.Context) {
 	log.Println("正在运行wss")
 	//升级get请求为webSocket协议
 	ws, err := upGrader.Upgrade(context.Writer, context.Request, nil)

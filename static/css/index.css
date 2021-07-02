@@ -1,9 +1,9 @@
-.item {
+.video-item {
     float: left;
     height: 300px;
     width: 460px;
 }
 
-.item-cover {
+.video-cover {
     height: 240px;
 }
