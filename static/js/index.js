@@ -4,19 +4,19 @@ function getVideoListByAjax(data) {
     $("div#video-list").empty();
 
     $.get("/video-list"+data,function(data, status){
-        var aa=`<a href="javascript:void(0);" onclick="getVideoListByAjax('')">全部 </a>`;
+        var aa=`<a type="button" class="btn btn-primary btn-xs" href="javascript:void(0);" onclick="getVideoListByAjax('')">全部 </a>`;
         $("div#query-list").append("请选择你的XP ",aa);
         for (var i=0;i<data.labelList.length;i++) {
-            var aa=`<a href="javascript:void(0);" onclick="getVideoListByAjax('` + `?label=` + data.labelList[i] +`')">`+ data.labelList[i] +` </a>`;
+            var aa=`<a type="button" class="btn btn-default btn-xs" href="javascript:void(0);" onclick="getVideoListByAjax('` + `?label=` + data.labelList[i] +`')">`+ data.labelList[i] +` </a>`;
             $("div#query-list").append(aa);
         }
 
         $("div#query-list").append("<br>");
 
-        var aa=`<a href="javascript:void(0);" onclick="getVideoListByAjax('')">我全都要 </a>`;
+        var aa=`<a type="button" class="btn btn-primary btn-xs" href="javascript:void(0);" onclick="getVideoListByAjax('')">我全都要 </a>`;
         $("div#query-list").append("请选择你的LP ", aa);
         for (var i=0;i<data.performerList.length;i++) {
-            var aa=`<a href="javascript:void(0);" onclick="getVideoListByAjax('` + `?performer=`  + data.performerList[i] + `')">` + data.performerList[i] +` </a>`;
+            var aa=`<a type="button" class="btn btn-default btn-xs" href="javascript:void(0);" onclick="getVideoListByAjax('` + `?performer=`  + data.performerList[i] + `')">` + data.performerList[i] +` </a>`;
             $("div#query-list").append(aa);
         }
 

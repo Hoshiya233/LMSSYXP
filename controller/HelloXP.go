@@ -33,7 +33,7 @@ func (h *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/video-list", h.videoList)
 	engine.GET("/video", h.video)
 	engine.GET("/iteachyou", h.iteachyou)
-	engine.POST("/scanpath", h.scanPath)
+	engine.GET("/scanpath", h.scanPath)
 	//engine.POST("/extractcover", h.extractcover)
 	engine.GET("/ws-jobplan", h.wsJobPlan)
 
