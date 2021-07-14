@@ -1,9 +1,4 @@
-.video-item {
-    float: left;
-    height: 300px;
-    width: 460px;
-}
-
-.video-cover {
-    height: 240px;
+#div-body {
+    width: auto;
+    height: 3000px;
 }

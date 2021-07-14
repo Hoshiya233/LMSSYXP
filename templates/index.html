@@ -8,8 +8,10 @@
 </head>
 
 <body>
-    大家来看看我的xp系统<br>
-    淦哦老兄，你的xp好jb怪哦<br>
+
+<div id="div-body">
+
+    大家来看看我的xp系统。淦哦老兄，你的xp好jb怪哦.jpg<br>
     <p>
         <form name="scanpath" action="/scanpath" method="post">
             <input type='hidden' name='page' value='1'/>
@@ -26,38 +28,15 @@
     </p>
 
     <p>
+        <!-- 任务进度条 -->
         <div id="msg-plan" style="width: 0px; height: 10px; background:rgb(41, 185, 221);"></div>
         <div id="msg-txt"></div>
     </p>
-
-    <p>
-        选择你的xp标签
-        <a href="/index">全部</a>
-        {{ range $i, $label := .labelList }}
-            <a href="/index?label={{ $label }}"> {{ $label }} </a> 
-        {{ end }}
-    </p>
-
-    <p>
-        选择你的lp
-        <a href="/index">我全都要</a>
-        {{ range $i, $lp := .performerList }}
-            <a href="/index?performer={{ $lp }}"> {{ $lp }} </a> 
-        {{ end }}
-    </p>
-
-
-    <div>
-        {{ range $i, $file := .MMDFileList }}
-        <div class="video-item">
-            <a href="/video?vid={{ $file.Id }}">
-            <img class="video-cover" src="{{ $file.CoverUrl }}"> <br>
-            {{ $file.Name }}
-            </a>
-        </div>
-        {{ end }}
-    </div>
     
+    <iframe src="/video-list" frameborder="0" scrolling="no" height="100%" width="100%"></iframe>
+
+</div>
+
 </body>
 
 <script>
@@ -91,6 +70,7 @@
     document.getElementById("extractcover").onclick = function() {
         ws_jobplan.send("extractcover");
     }
+    
 </script>
 
 </html>

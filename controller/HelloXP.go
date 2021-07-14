@@ -30,6 +30,7 @@ var MMDPerformerList []string
 func (h *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", h.index)
 	engine.GET("/index", h.index)
+	engine.GET("/video-list", h.videoList)
 	engine.GET("/video", h.video)
 	engine.GET("/iteachyou", h.iteachyou)
 	engine.POST("/scanpath", h.scanPath)
@@ -46,12 +47,18 @@ func (h *HelloXP) Router(engine *gin.Engine) {
 func (h *HelloXP) index(context *gin.Context) {
 	//context.JSON(200, &MMDFileList)
 
+	context.HTML(200, "index.html", gin.H{})
+}
+
+func (h *HelloXP) videoList(context *gin.Context) {
+	//context.JSON(200, &MMDFileList)
+
 	search_label := context.QueryArray("label")
 	search_performer := context.QueryArray("performer")
 	searchedList := searchLabel(MMDFileList, search_label)
 	searchedList = searchPerformer(searchedList, search_performer)
 
-	context.HTML(200, "index.html", gin.H{
+	context.HTML(200, "video_list.html", gin.H{
 		"MMDFileList":   searchedList,
 		"labelList":     MMDLabelList,
 		"performerList": MMDPerformerList,

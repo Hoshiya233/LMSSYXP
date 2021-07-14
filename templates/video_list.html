@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>大家来看看我的xp系统</title>
+    <link rel="stylesheet" href="/static/css/video_list.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
+</head>
+
+<body>
+
+<div id="div-body">
+
+    <p>
+        选择你的xp标签
+        <a href="/video-list">全部</a>
+        {{ range $i, $label := .labelList }}
+            <a href="/video-list?label={{ $label }}"> {{ $label }} </a> 
+        {{ end }}
+    </p>
+
+    <p>
+        选择你的lp
+        <a href="/video-list">我全都要</a>
+        {{ range $i, $lp := .performerList }}
+            <a href="/video-list?performer={{ $lp }}"> {{ $lp }} </a> 
+        {{ end }}
+    </p>
+
+
+    <div>
+        {{ range $i, $file := .MMDFileList }}
+        <div class="video-item">
+            <a href="/video?vid={{ $file.Id }}">
+            <img class="video-cover" src="{{ $file.CoverUrl }}"> <br>
+            {{ $file.Name }}
+            </a>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+</body>
+
+</html>
