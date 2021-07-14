@@ -231,5 +231,5 @@ func extractCover(msgList *tool.MessageList) {
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
 	//写入ws数据
-	msgList.Write(1, "已完成")
+	msgList.Write(1, "提取视频封面任务已完成")
 }
