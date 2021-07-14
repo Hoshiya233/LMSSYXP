@@ -1,9 +1,9 @@
-function getVideoListByAjax(data) {
+function getVideoListByAjax(filter_str) {
     //先清空元素
     $("div#query-list").empty();
     $("div#video-list").empty();
 
-    $.get("/video-list"+data,function(data, status){
+    $.get("/video-list"+filter_str,function(data, status){
         var aa=`<a type="button" class="btn btn-primary btn-xs" href="javascript:void(0);" onclick="getVideoListByAjax('')">全部 </a>`;
         $("div#query-list").append("请选择你的XP ",aa);
         for (var i=0;i<data.labelList.length;i++) {
