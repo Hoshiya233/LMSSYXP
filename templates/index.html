@@ -5,6 +5,9 @@
     <title>大家来看看我的xp系统</title>
     <link rel="stylesheet" href="/static/css/index.css">
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+
+    <script src="/static/js/index.js"></script>
 </head>
 
 <body>
@@ -33,7 +36,15 @@
         <div id="msg-txt"></div>
     </p>
     
-    <iframe src="/video-list" frameborder="0" scrolling="no" height="100%" width="100%"></iframe>
+    <div id="query-list">
+
+    </div>
+
+    <div id="video-list">
+
+    </div>
+
+    <!-- <iframe src="/video-list" frameborder="0" scrolling="no" height="100%" width="100%"></iframe> -->
 
 </div>
 
@@ -70,6 +81,9 @@
     document.getElementById("extractcover").onclick = function() {
         ws_jobplan.send("extractcover");
     }
+
+    $(document).ready(getVideoListByAjax(""));
+
     
 </script>
 

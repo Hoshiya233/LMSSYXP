@@ -51,18 +51,24 @@ func (h *HelloXP) index(context *gin.Context) {
 }
 
 func (h *HelloXP) videoList(context *gin.Context) {
-	//context.JSON(200, &MMDFileList)
 
 	search_label := context.QueryArray("label")
 	search_performer := context.QueryArray("performer")
 	searchedList := searchLabel(MMDFileList, search_label)
 	searchedList = searchPerformer(searchedList, search_performer)
 
-	context.HTML(200, "video_list.html", gin.H{
-		"MMDFileList":   searchedList,
+	data := map[string]interface{}{
 		"labelList":     MMDLabelList,
 		"performerList": MMDPerformerList,
-	})
+		"videoList":     &searchedList,
+	}
+	context.JSON(200, data)
+
+	// context.HTML(200, "video_list.html", gin.H{
+	// 	"MMDFileList":   searchedList,
+	// 	"labelList":     MMDLabelList,
+	// 	"performerList": MMDPerformerList,
+	// })
 }
 
 func (h *HelloXP) video(context *gin.Context) {
