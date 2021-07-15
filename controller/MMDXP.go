@@ -195,6 +195,20 @@ func readBgm(filename string) string {
 	return bgm
 }
 
+func scanPath(msgList *tool.MessageList) {
+	//获取文件列表
+	getMMDFileList()
+
+	//将数据写入到缓存中
+	tool.WriteStructToJson("MMDFileList.json", MMDFileList)
+
+	//更新筛选条件列表
+	MMDLabelList = getLabelList(MMDFileList)
+	MMDPerformerList = getPerformerList(MMDFileList)
+
+	msgList.Write(1, "指令：刷新视频列表")
+}
+
 func extractCover(msgList *tool.MessageList) {
 	/*
 		提取视频封面
@@ -231,5 +245,6 @@ func extractCover(msgList *tool.MessageList) {
 	end := time.Now()
 	log.Println("提取封面花费时间:", end.Sub(begin))
 	//写入ws数据
-	msgList.Write(1, "提取视频封面任务已完成")
+	msgList.Write(1, "提取视频封面任务完成")
+	msgList.Write(1, "指令：刷新视频列表")
 }

@@ -44,3 +44,20 @@ button.btn-default {
     align-items: center;
     display: inline-flex;
 }
+
+button.btn-primary {
+    height: 32px;
+    min-width: 12px;
+    padding: 0 10px;
+    border-radius: 16px;
+    background-color:rgb(41, 98, 221);
+    box-sizing: border-box;
+    outline: none;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    display: inline-flex;
+}

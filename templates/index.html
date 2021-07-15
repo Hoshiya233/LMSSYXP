@@ -19,8 +19,8 @@
     <h4>大家来看看我的xp系统。淦哦老兄，你的xp好jb怪哦.jpg</h4>
     
     <div id="head">
-        <button class="btn-default" onclick="location.href='/scanpath'">扫描目录</button>
-        <button class="btn-default" id="extractcover">提取视频封面</button>
+        <button class="btn-default" id="cmd-scanpath">扫描目录</button>
+        <button class="btn-default" id="cmd-extractcover">提取视频封面</button>
 
         <div id="box-job-plan-msg">
             <!-- 任务进度条 -->
@@ -56,17 +56,18 @@
     ws_jobplan.onmessage = function(evt) {
         var msg_str = Base64.decode(evt.data);
         var msg = JSON.parse(msg_str);
-        document.getElementById("msg-txt").innerText = msg.txt;
 
-        //进度条根据plan变长
-        document.getElementById("msg-plan").style.width = 200*msg.plan + 'px';
-        if (msg.plan == 1) {
-            //当进度到达1时，变为绿色
-            document.getElementById("msg-plan").style.background = "green";
-        }
-        //扫描封面完成后局部刷新
-        if (msg.txt == "提取视频封面任务已完成") {
+        //判断是否需要拦截并执行操作，否则直接打印消息
+        if (msg.txt == "指令：刷新视频列表") {
             getVideoListByAjax("");
+        }else {
+            document.getElementById("msg-txt").innerText = msg.txt;
+            //进度条根据plan变长
+            document.getElementById("msg-plan").style.width = 200*msg.plan + 'px';
+            if (msg.plan == 1) {
+                //当进度到达1时，变为绿色
+                document.getElementById("msg-plan").style.background = "green";
+            }
         }
     };
     //连接关闭时触发
@@ -75,15 +76,17 @@
         //console.log("Connection closed.");
     };
     
-    //按下“提取视频封面”按钮时
-    document.getElementById("extractcover").onclick = function() {
-        ws_jobplan.send("extractcover");
+    //按钮事件
+    document.getElementById("cmd-scanpath").onclick = function() {
+        ws_jobplan.send("cmd-scanpath");
+    }
+    document.getElementById("cmd-extractcover").onclick = function() {
+        ws_jobplan.send("cmd-extractcover");
     }
 
     //第一次打开页面时，展示视频列表
     $(document).ready(getVideoListByAjax(""));
 
-    
 </script>
 
 </html>

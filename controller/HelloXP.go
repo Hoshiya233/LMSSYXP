@@ -33,7 +33,7 @@ func (h *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/video-list", h.videoList)
 	engine.GET("/video", h.video)
 	engine.GET("/iteachyou", h.iteachyou)
-	engine.GET("/scanpath", h.scanPath)
+	// engine.GET("/scanpath", h.scanPath)
 	//engine.POST("/extractcover", h.extractcover)
 	engine.GET("/ws-jobplan", h.wsJobPlan)
 
@@ -78,17 +78,11 @@ func (h *HelloXP) video(context *gin.Context) {
 	})
 }
 
-func (h *HelloXP) scanPath(context *gin.Context) {
-	getMMDFileList()
+// func (h *HelloXP) scanPath(context *gin.Context) {
+// 	scanPath()
 
-	//将数据写入到缓存中
-	tool.WriteStructToJson("MMDFileList.json", MMDFileList)
-
-	MMDLabelList = getLabelList(MMDFileList)
-	MMDPerformerList = getPerformerList(MMDFileList)
-
-	context.Redirect(301, "/index")
-}
+// 	context.Redirect(301, "/index")
+// }
 
 // func (h *HelloXP) extractcover(context *gin.Context) {
 // 	context.Redirect(301, "/index")
@@ -125,8 +119,12 @@ func (h *HelloXP) wsJobPlan(context *gin.Context) {
 				return
 			}
 
+			// 扫描目录
+			if string(message) == "cmd-scanpath" {
+				scanPath(msgList)
+			}
 			// 提取视频封面
-			if string(message) == "extractcover" {
+			if string(message) == "cmd-extractcover" {
 				extractCover(msgList)
 			}
 
