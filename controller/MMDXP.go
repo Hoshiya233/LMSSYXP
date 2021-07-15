@@ -54,38 +54,38 @@ func getMMDFileList() {
 
 }
 
-func searchLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
+func filterLabel(fileList []MMDFileInfo, labels []string) []MMDFileInfo {
 	if len(labels) == 0 {
 		return fileList
 	}
-	var searchedList []MMDFileInfo
+	var filteredList []MMDFileInfo
 	for _, fileinfo := range fileList {
-		for _, search_label := range labels {
+		for _, filter_label := range labels {
 			for _, file_label := range fileinfo.Label {
-				if search_label == file_label {
-					searchedList = append(searchedList, fileinfo)
+				if filter_label == file_label {
+					filteredList = append(filteredList, fileinfo)
 				}
 			}
 		}
 	}
-	return searchedList
+	return filteredList
 }
 
-func searchPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo {
+func filterPerformer(fileList []MMDFileInfo, performers []string) []MMDFileInfo {
 	if len(performers) == 0 {
 		return fileList
 	}
-	var searchedList []MMDFileInfo
+	var filteredList []MMDFileInfo
 	for _, fileinfo := range fileList {
-		for _, search_performer := range performers {
+		for _, filter_performer := range performers {
 			for _, file_performer := range fileinfo.Performer {
-				if search_performer == file_performer {
-					searchedList = append(searchedList, fileinfo)
+				if filter_performer == file_performer {
+					filteredList = append(filteredList, fileinfo)
 				}
 			}
 		}
 	}
-	return searchedList
+	return filteredList
 }
 
 func getLabelList(fileList []MMDFileInfo) []string {

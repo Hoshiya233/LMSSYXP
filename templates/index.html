@@ -2,38 +2,40 @@
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
     <title>大家来看看我的xp系统</title>
-    <link rel="stylesheet" href="/static/css/index.css">
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
     <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"> -->
+    
+    <link rel="stylesheet" href="/static/css/index.css">
     <script src="/static/js/index.js"></script>
 </head>
 
 <body>
 
-<div id="div-body">
+<div id="body">
 
     <h4>大家来看看我的xp系统。淦哦老兄，你的xp好jb怪哦.jpg</h4>
-    <p>
-        <a class="btn btn-default" href="/scanpath" >扫描目录</a>
-        <button class="btn btn-default" id="extractcover">提取视频封面</button>
-
-    </p>
-
-    <p>
-        <!-- 任务进度条 -->
-        <div id="msg-plan" style="width: 0px; height: 10px; background:rgb(41, 185, 221);"></div>
-        <div id="msg-txt"></div>
-    </p>
     
-    <div id="query-list">
+    <div id="head">
+        <button class="btn-default" onclick="location.href='/scanpath'">扫描目录</button>
+        <button class="btn-default" id="extractcover">提取视频封面</button>
 
+        <div id="box-job-plan-msg">
+            <!-- 任务进度条 -->
+            <div id="msg-plan"></div>
+            <div id="msg-txt"></div>
+        </div>
+    </div>
+
+
+    <div id="filter-list">
+        <!-- 视频筛选条件列表 -->
     </div>
 
     <div id="video-list">
-
+        <!-- 视频列表 -->
     </div>
 
     <!-- <iframe src="/video-list" frameborder="0" scrolling="no" height="100%" width="100%"></iframe> -->
@@ -78,6 +80,7 @@
         ws_jobplan.send("extractcover");
     }
 
+    //第一次打开页面时，展示视频列表
     $(document).ready(getVideoListByAjax(""));
 
     

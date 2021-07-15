@@ -1,13 +1,46 @@
-#div-body {
+div#body {
     width: auto;
 }
 
-.video-item {
+div#box-job-plan-msg {
+    float: right;
+    width: 200px;
+    height: 30px;
+}
+
+div#msg-plan {
+    width: 0px;
+    height: 10px;
+    background:rgb(41, 185, 221);
+}
+
+div.video-item {
     float: left;
     height: 300px;
     width: 460px;
 }
 
-.video-cover {
+img.video-cover {
     height: 240px;
+}
+
+a.video-link {
+    text-decoration:none;
+    font-style: normal;
+}
+
+button.btn-default {
+    height: 32px;
+    min-width: 12px;
+    padding: 0 10px;
+    border-radius: 16px;
+    box-sizing: border-box;
+    outline: none;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    display: inline-flex;
 }
