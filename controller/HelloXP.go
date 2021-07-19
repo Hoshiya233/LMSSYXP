@@ -127,8 +127,6 @@ func (h *HelloXP) wsJobPlan(context *gin.Context) {
 			if string(message) == "cmd-extractcover" {
 				extractCover(msgList)
 			}
-
-			time.Sleep(time.Second * 10)
 		}
 	}()
 

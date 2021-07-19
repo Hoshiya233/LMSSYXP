@@ -206,7 +206,7 @@ func scanPath(msgList *tool.MessageList) {
 	MMDLabelList = getLabelList(MMDFileList)
 	MMDPerformerList = getPerformerList(MMDFileList)
 
-	msgList.Write(1, "指令：刷新视频列表")
+	msgList.Write(1, "扫描视频目录任务已完成")
 }
 
 func extractCover(msgList *tool.MessageList) {
@@ -246,5 +246,5 @@ func extractCover(msgList *tool.MessageList) {
 	log.Println("提取封面花费时间:", end.Sub(begin))
 	//写入ws数据
 	msgList.Write(1, "提取视频封面任务完成")
-	msgList.Write(1, "指令：刷新视频列表")
+	msgList.Write(1, "指令：刷新页面")
 }
