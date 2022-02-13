@@ -227,8 +227,8 @@ func extractCover(msgList *tool.MessageList) {
 		go func(item *MMDFileInfo) {
 			pool.AddOne() // 向并发控制池中添加一个, 一旦池满则此处阻塞
 			//任务处理
-			coverPath := `.\static\tmp\cover\` + strconv.Itoa(item.Id) + `.jpg`
-			out := exec.Command(`C:\Program Files\ffmpeg\bin\ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
+			coverPath := `./static/tmp/cover/` + strconv.Itoa(item.Id) + `.jpg`
+			out := exec.Command(`ffmpeg`, "-threads", "1", "-ss", "5", "-i", item.Path, "-y", "-f", "image2", "-t", "0.001", coverPath)
 			out.Output()
 			pool.DelOne() // 从并发控制池中释放一个, 之后其他被阻塞的可以进入池中
 
