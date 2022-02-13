@@ -29,10 +29,13 @@ func getMMDFileList() {
 	MMDFileList = nil
 	for _, path := range tool.MMDPaths {
 		f, err := filepath.Glob(filepath.Join(path, "*"))
+		log.Println("正在扫描目录: ", path)
+
 		if err != nil {
 			log.Fatal(err)
 		}
 		filePathNames = append(filePathNames, f...)
+		log.Println("扫描到了: ", f)
 	}
 
 	var mmdFileInfo MMDFileInfo
