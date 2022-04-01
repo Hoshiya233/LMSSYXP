@@ -1,6 +1,6 @@
 server:
   port: 8004
-
+  url: http://localhost:8004
 mmdpaths:
   - Y:\ACG\MMD
 
