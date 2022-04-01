@@ -27,6 +27,9 @@ var MMDFileList []MMDFileInfo
 var MMDLabelList []string
 var MMDPerformerList []string
 
+// websocket连接请求域名
+var ws_url string
+
 func (h *HelloXP) Router(engine *gin.Engine) {
 	engine.GET("/", h.index)
 	engine.GET("/index", h.index)
@@ -41,13 +44,23 @@ func (h *HelloXP) Router(engine *gin.Engine) {
 	tool.ReadStructFromJson("MMDFileList.json", &MMDFileList)
 	MMDLabelList = getLabelList(MMDFileList)
 	MMDPerformerList = getPerformerList(MMDFileList)
-
+	// 判断用户配置的ip和端口、以及http or https，自动切换ws、wss
+	if tool.AllConfig.Server.Url[:5] == "https" {
+		ws_url = "wss" + tool.AllConfig.Server.Url[5:]
+	} else if tool.AllConfig.Server.Url[:5] == "http:" {
+		ws_url = "ws:" + tool.AllConfig.Server.Url[5:]
+	} else {
+		ws_url = tool.AllConfig.Server.Url
+	}
+	log.Println("controller.ws_url: ", ws_url)
 }
 
 func (h *HelloXP) index(context *gin.Context) {
 	//context.JSON(200, &MMDFileList)
 
-	context.HTML(200, "index.html", gin.H{})
+	context.HTML(200, "index.html", gin.H{
+		"ws_url": ws_url,
+	})
 }
 
 func (h *HelloXP) videoList(context *gin.Context) {
