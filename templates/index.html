@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark">
     <title>大家来看看我的xp系统</title>
     <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
-    <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"> -->
     
     <link rel="stylesheet" href="/static/css/index.css">
@@ -45,7 +45,8 @@
 </body>
 
 <script>
-    var ws_jobplan = new WebSocket("ws://localhost:8004/ws-jobplan");  
+    var ws_url = "{{ .ws_url }}"
+    var ws_jobplan = new WebSocket(ws_url+"/ws-jobplan");
     //连接打开时触发
     ws_jobplan.onopen = function(evt) {
         //document.getElementById("msg").innerText = "Connection open ...";

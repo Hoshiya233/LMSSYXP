@@ -15,6 +15,7 @@ type Config struct {
 
 type Server struct {
 	Port string `yaml:"port"`
+	Url  string `yaml:"url"`
 }
 
 // type Database struct {
@@ -25,6 +26,8 @@ type Server struct {
 // }
 
 var MMDPaths []string
+
+var AllConfig *Config
 
 func ParseConfig(path string) *Config {
 	var config *Config
@@ -38,5 +41,6 @@ func ParseConfig(path string) *Config {
 		log.Fatalf("Unmarshal: %v", err)
 	}
 	MMDPaths = config.MMDpaths
+	log.Println("配置文件: ", config)
 	return config
 }

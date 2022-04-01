@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	config := tool.ParseConfig(`config.yml`)
+	tool.AllConfig = tool.ParseConfig(`config.yml`)
 	engine := gin.Default()
 
 	xpManager := engine
@@ -15,6 +15,7 @@ func main() {
 	xpManager.Static("/static", "./static")
 
 	//挂载媒体目录
+
 	// var path_head_list []string
 	// for _, path := range config.MMDpaths {
 	// 	a := strings.Split(path, ":")[0]
@@ -31,7 +32,7 @@ func main() {
 
 	registerRouter(xpManager)
 
-	xpManager.Run(":" + config.Server.Port)
+	xpManager.Run(":" + tool.AllConfig.Server.Port)
 }
 
 //路由设置
