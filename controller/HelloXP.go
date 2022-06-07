@@ -121,6 +121,8 @@ func (h *HelloXP) wsJobPlan(context *gin.Context) {
 	msgList := tool.NewMessageList()
 
 	go func() {
+		isScanningPath := false
+		isExtractingCover := false
 		for {
 			//读取ws数据
 			t, message, err := ws.ReadMessage()
@@ -133,12 +135,16 @@ func (h *HelloXP) wsJobPlan(context *gin.Context) {
 			}
 
 			// 扫描目录
-			if string(message) == "cmd-scanpath" {
+			if string(message) == "cmd-scanpath" && !isScanningPath {
+				isScanningPath = true
 				scanPath(msgList)
+				isScanningPath = false
 			}
 			// 提取视频封面
-			if string(message) == "cmd-extractcover" {
+			if string(message) == "cmd-extractcover" && !isExtractingCover {
+				isExtractingCover = true
 				extractCover(msgList)
+				isExtractingCover = false
 			}
 		}
 	}()
