@@ -146,7 +146,8 @@ func readLabel(filename string) []string {
 	}
 
 	for i := 1; i < len(a); i++ {
-		label = append(label, strings.TrimRight(a[i], "]"))
+		// label = append(label, strings.TrimRight(a[i], "]"))
+		label = append(label, strings.SplitN(a[i], "]", 1)[0])
 	}
 
 	return label
