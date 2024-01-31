@@ -1,0 +1,17 @@
+name: download-genshen-Anti-harmony
+on:
+  workflow_dispatch
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: download
+        run: |
+          wget d1xhrf0qmvurrp.cloudfront.net/CPatch/Release.7z
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: ./
+          retention-days: 1
